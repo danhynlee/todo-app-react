@@ -2,6 +2,7 @@ import React from "react"
 
 import TodoList from "./TodoList";
 import Header from "./Header";
+import TodoInput from "./TodoInput";
 
 // class based component
 class TodoContainer extends React.Component {
@@ -72,6 +73,7 @@ class TodoContainer extends React.Component {
       // passing state data to child component via props
       <div>
         <Header />
+        <TodoInput />
         <TodoList
           todos={this.state.todos}
           handleChangeProps={this.handleChange}
