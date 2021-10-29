@@ -50,6 +50,16 @@ class TodoContainer extends React.Component {
     }))
   };
 
+  delTodo = id => {
+    this.setState({
+      todos: [
+        ...this.state.todos.filter(todo => {
+          return todo.id !== id;
+        })
+      ]
+    });
+  };
+
   render() {
     return (
       // JSX (not HTML)
@@ -62,7 +72,11 @@ class TodoContainer extends React.Component {
       // passing state data to child component via props
       <div>
         <Header />
-        <TodoList todos={this.state.todos} handleChangeProps={this.handleChange}/>
+        <TodoList
+          todos={this.state.todos}
+          handleChangeProps={this.handleChange}
+          deleteTodoProps={this.delTodo}
+        />
       </div>
     );
   }
