@@ -15,7 +15,12 @@ class TodoInput extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.state.title);
+    this.props.addTodoProps(this.state.title);
+
+    // clears input field once submitting
+    this.setState({
+      title: ""
+    });
   };
 
   render() {
