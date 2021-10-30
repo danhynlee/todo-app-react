@@ -9,26 +9,11 @@ import TodoInput from "./TodoInput";
 class TodoContainer extends React.Component {
   // declaring state => object with key-value pair
   state = {
-    todos: [
-      {
-        id: uuidv4(),
-        title: "Setup development environment",
-        completed: true
-      },
-      {
-        id: uuidv4(),
-        title: "Develop website and add content",
-        completed: false
-      },
-      {
-        id: uuidv4(),
-        title: "Deploy to live server",
-        completed: false
-      },
-    ]
+    todos: [],
   };
 
   handleChange = (id) => {
+    // below does not guarantee that this.state in .setState() is updated
     // this.setState({
     //   todos: this.state.todos.map(todo => {
     //     if (todo.id === id) {
@@ -37,7 +22,6 @@ class TodoContainer extends React.Component {
     //     return todo;
     //   })
     // });
-    // above method does not guarantee that this.state in .setState() is updated
 
     this.setState(prevState => ({
       todos: prevState.todos.map(todo => {
@@ -73,6 +57,55 @@ class TodoContainer extends React.Component {
     })
   }
 
+  setUpdate = (updatedTitle, id) => {
+    this.setState({
+      todos: this.state.todos.map(todo => {
+        if (todo.id === id) {
+          todo.title = updatedTitle
+        }
+        return todo
+      }),
+    })
+  }
+
+  // lifecycle method like render()
+  // but gets invoked immediately after render()
+  // componentDidMount() {
+  //   // make a request to url containing api data
+  //   // returns promise containing HTTP response
+  //   // recieved in string so had to convert to json (.json())
+  //   fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+  //     .then(res => res.json())
+  //     .then(data => this.setState({ todos: data}));
+    
+  //   const temp = localStorage.getItem("todos")
+  //   const loadedTodos = JSON.parse(temp)
+  //   if (loadedTodos) {
+  //     this.setState({
+  //       todos: loadedTodos
+  //     })
+  //   }
+  // }
+
+  // another lifecycle method that gets invoked
+  // immediately after updating (if props or state changes)
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.todos !== this.state.todos) {
+      const temp = JSON.stringify(this.state.todos)
+      localStorage.setItem("todos", temp)
+    }
+  }
+
+  componentDidMount() {
+    const temp = localStorage.getItem("todos")
+    const loadedTodos = JSON.parse(temp)
+    if (loadedTodos) {
+      this.setState({
+        todos: loadedTodos
+      })
+    }
+  }
+
   render() {
     return (
       // JSX (not HTML)
@@ -92,6 +125,7 @@ class TodoContainer extends React.Component {
             todos={this.state.todos}
             handleChangeProps={this.handleChange}
             deleteTodoProps={this.delTodo}
+            setUpdate={this.setUpdate}
           />
         </div>
       </div>
