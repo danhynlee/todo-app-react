@@ -1,5 +1,7 @@
 # React To Do App
 
+Short tutorial I am doing to get a feel of React
+
 In the project directory, you can run:
 
 ### `npm start`
