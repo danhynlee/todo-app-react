@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 // useState is a Hook to add a local state into function component
+import { FaPlusCircle } from "react-icons/fa"
 
 // Hooks can only be called at top level of the function component
 // or from custom hooks (not in loop, condition, reg function)
@@ -44,7 +45,9 @@ const TodoInput = props => {
         name="title"
         onChange={onChange}
       />
-      <button className="input-submit">Submit</button>
+      <button className="input-submit">
+        <FaPlusCircle />
+      </button>
     </form>
   )
 }
