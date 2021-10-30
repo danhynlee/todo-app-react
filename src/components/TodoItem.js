@@ -1,12 +1,19 @@
 import React from "react";
 
+// css modules
+// styles is a JavaScript object
+// classes are selected by styles.classSelector
+import styles from "./TodoItem.module.css"
+
 // class based component
 class TodoItem extends React.Component {
   render() {
     return (
-      <li>
+      // css modules generate unique class names so prevents selector conflicts
+      <li className={styles.item}>
         <input
           type="checkbox"
+          className={styles.checkbox}
           checked={this.props.todo.completed}
           onChange={() => this.props.handleChangeProps(this.props.todo.id)}
         />
