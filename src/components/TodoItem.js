@@ -3,11 +3,18 @@ import React from "react";
 // css modules
 // styles is a JavaScript object
 // classes are selected by styles.classSelector
-import styles from "./TodoItem.module.css"
+import styles from "./TodoItem.module.css";
 
 // class based component
 class TodoItem extends React.Component {
   render() {
+    const completedStyle = {
+      fontStyle: "italic",
+      color: "#595959",
+      opacity: 0.4,
+      textDecoration: "line-through",
+    }
+
     return (
       // css modules generate unique class names so prevents selector conflicts
       <li className={styles.item}>
@@ -19,7 +26,10 @@ class TodoItem extends React.Component {
         />
         <button onClick={() => this.props.deleteTodoProps(this.props.todo.id)}>
           Delete
-        </button> {this.props.todo.title}
+        </button>
+        <span style={this.props.todo.completed ? completedStyle : null}>
+          {this.props.todo.title}
+        </span>
       </li>
     )
   }
