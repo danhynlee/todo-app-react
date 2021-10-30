@@ -32,10 +32,7 @@ const TodoItem = props => {
     editMode.display = "none"
   }
 
-  // componentWillUnmount() {
-  //   console.log("cleaning up ...")
-  // }
-  // above is unnecessary becuase useEffect also perform cleanup affect
+  // componentWillUnmount is unnecessary becuase useEffect also perform cleanup affect
   // along with its render by default
   useEffect(() => {
     // when returning a function inside useEffect w/o dependencies
