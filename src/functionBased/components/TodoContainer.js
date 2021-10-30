@@ -1,30 +1,18 @@
-import React from "react"
-import {v4 as uuidv4 } from "uuid";
-
-import TodoList from "./TodoList";
+import React, { useState, useEffect } from "react"
 import Header from "./Header";
 import TodoInput from "./TodoInput";
+import TodoList from "./TodoList";
+import {v4 as uuidv4 } from "uuid";
 
-// class based component
-class TodoContainer extends React.Component {
-  // declaring state => object with key-value pair
-  state = {
-    todos: [],
-  };
+// no props becuase it is the parent component
+const TodoContainer = () => {
+  // removes redundant useEffect call with empty array
+  const [todos, setTodos] = useState(getInitialTodos())
 
-  handleChange = (id) => {
-    // below does not guarantee that this.state in .setState() is updated
-    // this.setState({
-    //   todos: this.state.todos.map(todo => {
-    //     if (todo.id === id) {
-    //       todo.completed = !todo.completed;
-    //     }
-    //     return todo;
-    //   })
-    // });
-
-    this.setState(prevState => ({
-      todos: prevState.todos.map(todo => {
+  // acces to prevState from function passed to setTodos
+  const handleChange = id => {
+    setTodos(prevState =>
+      prevState.map(todo => {
         if (todo.id === id) {
           return {
             ...todo,
@@ -32,105 +20,88 @@ class TodoContainer extends React.Component {
           }
         }
         return todo
+      })
+    )
+  }
+
+  const delTodo = id => {
+    setTodos([
+      ...todos.filter(todo => {
+        return todo.id !== id
       }),
-    }))
-  };
+    ])
+  }
 
-  delTodo = id => {
-    this.setState({
-      todos: [
-        ...this.state.todos.filter(todo => {
-          return todo.id !== id;
-        })
-      ]
-    });
-  };
-
-  addTodoItem = title => {
+  const addTodoItem = title => {
     const newTodo = {
       id: uuidv4(),
       title: title,
       completed: false
-    };
-    this.setState({
-      todos: [...this.state.todos, newTodo]
-    })
+    }
+    setTodos([...todos, newTodo])
   }
 
-  setUpdate = (updatedTitle, id) => {
-    this.setState({
-      todos: this.state.todos.map(todo => {
+  const setUpdate = (updatedTitle, id) => {
+    setTodos(
+      todos.map(todo => {
         if (todo.id === id) {
           todo.title = updatedTitle
         }
         return todo
-      }),
-    })
+      })
+    )
   }
 
-  // lifecycle method like render()
-  // but gets invoked immediately after render()
-  // componentDidMount() {
-  //   // make a request to url containing api data
-  //   // returns promise containing HTTP response
-  //   // recieved in string so had to convert to json (.json())
-  //   fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
-  //     .then(res => res.json())
-  //     .then(data => this.setState({ todos: data}));
-    
+  // hook method serves as lifecycle methods from class based components
+  // like componentDidUpdate()/DidMount()/etc.
+  // function will define which side effect to run
+  // optional array as parameter defines when to re-run effect
+  // -> array needed when effect uses any component values (props,states,functions)
+  // default, this method will run after every completed render (first render or any time state/prop changes)
+  // useEffect(() => {
+  //   console.log("test run")
+  //   // getting stored items in local storage on broswer
   //   const temp = localStorage.getItem("todos")
   //   const loadedTodos = JSON.parse(temp)
   //   if (loadedTodos) {
-  //     this.setState({
-  //       todos: loadedTodos
-  //     })
+  //     // although we are using setTodos function
+  //     // it is not necessary to add to parameter array
+  //     // because it never changes so it is safe to omit (stable & doesn't change on re-renders)
+  //     // ESLint may give warning => just add setTodos to array then
+  //     setTodos(loadedTodos)
   //   }
-  // }
+  // }, [])
 
-  // another lifecycle method that gets invoked
-  // immediately after updating (if props or state changes)
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.todos !== this.state.todos) {
-      const temp = JSON.stringify(this.state.todos)
-      localStorage.setItem("todos", temp)
-    }
-  }
-
-  componentDidMount() {
+  // another method from above
+  function getInitialTodos() {
+    // getting stored items in local storage on browser
     const temp = localStorage.getItem("todos")
-    const loadedTodos = JSON.parse(temp)
-    if (loadedTodos) {
-      this.setState({
-        todos: loadedTodos
-      })
-    }
+    const savedTodos = JSON.parse(temp)
+    return savedTodos || []
   }
 
-  render() {
-    return (
-      // JSX (not HTML)
-      // will automaticall be converted to vanilla JS by Babel (already installed by create-react-app CLI)
-      // <div>
-      //   <h1>Hello from Create React App</h1>
-      //   <p>I am in a React Component!</p>
-      // </div>
+  // this useEffect will only run when todos is change
+  // React will check on the dependencies to re-run effect
+  useEffect(() => {
+    // storing todo items
+    const temp = JSON.stringify(todos)
+    localStorage.setItem("todos", temp)
+  }, [todos])
 
-      // passing state data to child component via props
-      // className is JSX (class in HTML)
-      <div className="container">
-        <div className="inner">
-          <Header />
-          <TodoInput addTodoProps={this.addTodoItem} />
-          <TodoList
-            todos={this.state.todos}
-            handleChangeProps={this.handleChange}
-            deleteTodoProps={this.delTodo}
-            setUpdate={this.setUpdate}
-          />
-        </div>
+  return (
+    <div className="container">
+      <div className="inner">
+        <Header />
+        <TodoInput addTodoProps={addTodoItem} />
+        <TodoList
+          todos={todos}
+          handleChangeProps={handleChange}
+          deleteTodoProps={delTodo}
+          setUpdate={setUpdate}
+        />
       </div>
-    );
-  }
+    </div>
+  )
 }
 
 export default TodoContainer

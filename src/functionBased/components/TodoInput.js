@@ -1,47 +1,52 @@
-import React, { Component } from "react";
+import React, { useState } from "react"
+// useState is a Hook to add a local state into function component
 
-class TodoInput extends Component {
-  state = {
-    title: ""
-  };
+// Hooks can only be called at top level of the function component
+// or from custom hooks (not in loop, condition, reg function)
+// to ensure that each state is rendered in the same order
+// this project is handling preserving state because of create-react-app
+// else would need to use ESLint plugin
+// -> this keyword does not exist in function based component (same as methods in class components)
+const TodoInput = props => {
+  // destructuring state arra (contains value passed into useState ""
+  // and a function to update that current value)
+  const [inputText, setInputText] = useState({
+    title: "",
+  })
 
-  // e is a predetermined parameter
-  // holds info on the event
-  onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+  const onChange = e => {
+    // instead of setState() in classBased component
+    setInputText({
+      ...inputText,
+      [e.target.name]: e.target.value,
+    })
+  }
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    if (this.state.title.trim()) {
-      this.props.addTodoProps(this.state.title);
-      // clears input field once submitting
-      this.setState({
-        title: ""
+  const handleSubmit = e => {
+    e.preventDefault()
+    if (inputText.title.trim()) {
+      props.addTodoProps(inputText.title)
+      setInputText({
+        title: "",
       })
     } else {
       alert("Please write item")
     }
-  };
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} className="form-container">
-        <input
-          type="text"
-          className="input-text"
-          placeholder="Add Todo..."
-          value={this.state.title}
-          name="title"
-          onChange={this.onChange}
-        />
-        <button className="input-submit">Submit</button>
-      </form>
-    )
   }
+
+  return (
+    <form onSubmit={handleSubmit} className="form-container">
+      <input
+        type="text"
+        className="input-text"
+        placeholder="Add todo..."
+        value={inputText.title}
+        name="title"
+        onChange={onChange}
+      />
+      <button className="input-submit">Submit</button>
+    </form>
+  )
 }
 
 export default TodoInput
