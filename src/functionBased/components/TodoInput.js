@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 // useState is a Hook to add a local state into function component
 import { FaPlusCircle } from "react-icons/fa"
+// import { IconContext } from "react-icons"
 
 // Hooks can only be called at top level of the function component
 // or from custom hooks (not in loop, condition, reg function)
@@ -48,6 +49,23 @@ const TodoInput = props => {
       <button className="input-submit">
         <FaPlusCircle />
       </button>
+
+      {/*
+        another way to style icons that are side by side without targeting them in CSS file (easier) 
+        this allows for configuring prop (everything within .Provider)
+      <IconContext.Provider
+      value={{
+        color: "darkcyan",
+        style: { fontSize: "20px", color: "#ff0000"},
+        className: "submit-icon"
+      }}
+      >
+        <button className="input-submit">
+          <FaPlusCircle />
+          <FaPlusCircle />
+          <FaPlusCircle />
+        </button>
+      </IconContext.Provider> */}
     </form>
   )
 }
