@@ -83,14 +83,17 @@ class TodoContainer extends React.Component {
       // </div>
 
       // passing state data to child component via props
-      <div>
-        <Header />
-        <TodoInput addTodoProps={this.addTodoItem} />
-        <TodoList
-          todos={this.state.todos}
-          handleChangeProps={this.handleChange}
-          deleteTodoProps={this.delTodo}
-        />
+      // className is JSX (class in HTML)
+      <div className="container">
+        <div className="inner">
+          <Header />
+          <TodoInput addTodoProps={this.addTodoItem} />
+          <TodoList
+            todos={this.state.todos}
+            handleChangeProps={this.handleChange}
+            deleteTodoProps={this.delTodo}
+          />
+        </div>
       </div>
     );
   }
