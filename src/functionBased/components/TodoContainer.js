@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react"
-import Header from "./Header";
-import TodoInput from "./TodoInput";
-import TodoList from "./TodoList";
-import {v4 as uuidv4 } from "uuid";
+import NavBar from "./Navbar"
+import Header from "./Header"
+import TodoInput from "./TodoInput"
+import TodoList from "./TodoList"
+import {v4 as uuidv4 } from "uuid"
+import { Route, Switch } from "react-router-dom"
+import About from "../pages/About"
+import NotMatch from "../pages/NotMatch"
 
 // no props becuase it is the parent component
 const TodoContainer = () => {
@@ -89,18 +93,31 @@ const TodoContainer = () => {
   }, [todos])
 
   return (
-    <div className="container">
-      <div className="inner">
-        <Header />
-        <TodoInput addTodoProps={addTodoItem} />
-        <TodoList
-          todos={todos}
-          handleChangeProps={handleChange}
-          deleteTodoProps={delTodo}
-          setUpdate={setUpdate}
-        />
-      </div>
-    </div>
+    <>
+    <NavBar />
+      <Switch>
+        <Route exact path="/">
+          <div className="container">
+            <div className="inner">
+              <Header />
+              <TodoInput addTodoProps={addTodoItem} />
+              <TodoList
+                todos={todos}
+                handleChangeProps={handleChange}
+                deleteTodoProps={delTodo}
+                setUpdate={setUpdate}
+              />
+            </div>
+          </div>
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="*">
+          <NotMatch />
+        </Route>
+      </Switch>
+    </>
   )
 }
 
